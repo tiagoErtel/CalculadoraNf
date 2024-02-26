@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from tabulate import tabulate
 
 # XML file of the NF (Nota fiscal)
-xml_file_path = 'nfdsudeste.xml'
+xml_file_path = 'nfdsul.xml'
 tags_itens = {}
 
 def calc_itens():
@@ -17,6 +17,7 @@ def calc_itens():
     calcTag('.//ns:det/ns:prod/ns:', 'vIPI')       # Tag não testada, verificar path
     calcTag('.//ns:impostoDevol/ns:IPI/ns:', 'vIPIdevol')
     calcTag('.//ns:det/ns:prod/ns:', 'vServ')      # Tag não testada, verificar path
+    calcTag('.//ns:imposto/ns:ICMS//ns:', 'vBC')
 
     calcTotItens()
 
@@ -24,12 +25,11 @@ def calc_itens():
 def calcTotItens():
     tags_itens['total'] = 0
     for x in tags_itens.keys():
-        if x == 'total':
-            return
-        
-        if 'vDesc' == x == 'vICMSDeson':
+        if x == 'total' or x == 'vBC':   # Não conta para o total
+            continue
+        if 'vDesc' == x == 'vICMSDeson': # Desconta do total
             tags_itens['total'] -= tags_itens[x]
-        else:
+        else:                            # Soma no total
             tags_itens['total'] += tags_itens[x]
 
 
@@ -38,7 +38,6 @@ def calcTag(Xpath, tag):
     global tags_itens
     tree = ET.parse(xml_file_path)
     root = tree.getroot()
-
     namespace = {'ns': 'http://www.portalfiscal.inf.br/nfe'}
     Xpath += tag
     tags_itens[tag] = sum(float(prod.text) for prod in root.findall(Xpath, namespace))
@@ -47,8 +46,7 @@ def calcTag(Xpath, tag):
 def print_itens():
     tab = []
     for x in tags_itens.keys():
-        c = [x, tags_itens[x]]
-        tab.append(c)
+        tab.append([x, tags_itens[x]])
 
     table = tabulate(tab, headers=["Tag", "Valor"])
     print(table)
@@ -57,4 +55,3 @@ def print_itens():
 if __name__ == "__main__":
     calc_itens()
     print_itens()
-
