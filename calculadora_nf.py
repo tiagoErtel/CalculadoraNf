@@ -1,8 +1,10 @@
 import xml.etree.ElementTree as ET
+import tkinter as tk
+from tkinter import ttk
 from tabulate import tabulate
 
 # XML file of the NF (Nota fiscal)
-xml_file_path = 'nfdsul.xml'
+xml_file_path = 'nfdsulagoravai.xml'
 tags_itens = {}
 
 def calc_itens():
@@ -25,11 +27,11 @@ def calc_itens():
 def calcTotItens():
     tags_itens['total'] = 0
     for x in tags_itens.keys():
-        if x == 'total' or x == 'vBC':   # Não conta para o total
+        if x in ['total','vBC']:                  # Não conta para o total
             continue
-        if 'vDesc' == x == 'vICMSDeson': # Desconta do total
+        elif x in ['vDesc','vICMSDeson']:         # Desconta do total
             tags_itens['total'] -= tags_itens[x]
-        else:                            # Soma no total
+        else:                                     # Soma no total
             tags_itens['total'] += tags_itens[x]
 
 
@@ -43,15 +45,111 @@ def calcTag(Xpath, tag):
     tags_itens[tag] = sum(float(prod.text) for prod in root.findall(Xpath, namespace))
 
 
-def print_itens():
-    tab = []
-    for x in tags_itens.keys():
-        tab.append([x, tags_itens[x]])
+def openWindow():
+    # Cria uma instância da classe Tk, que é a janela principal do aplicativo
+    window = tk.Tk()
 
-    table = tabulate(tab, headers=["Tag", "Valor"])
-    print(table)
+    # Adiciona um título à janela
+    window.title("Calculadora NF")
+
+    # Define as dimensões da janela
+    window.geometry("1366x768")
+
+    #vProd
+    label = ttk.Label(text='vProd:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vProd'])
+
+    #vDesc
+    label = ttk.Label(text='vDesc:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vDesc'])
+
+    #vICMSDeson
+    label = ttk.Label(text='vICMSDeson:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vICMSDeson'])
+
+    #vST
+    label = ttk.Label(text='vST:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vST'])
+
+    #vFrete
+    label = ttk.Label(text='vFrete:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vFrete'])
+
+    #vSeg
+    label = ttk.Label(text='vSeg:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vSeg'])
+
+    #vOutro
+    label = ttk.Label(text='vOutro:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vOutro'])
+
+    #vII
+    label = ttk.Label(text='vII:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vII'])
+
+    #vIPI
+    label = ttk.Label(text='vIPI:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vIPI'])
+
+    #vIPIdevol
+    label = ttk.Label(text='vIPIdevol:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vIPIdevol'])
+
+    #vServ
+    label = ttk.Label(text='vServ:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vServ'])
+
+    #vBC
+    label = ttk.Label(text='vBC:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['vBC'])
+
+    #Total
+    label = ttk.Label(text='Total:')
+    label.pack()
+    text = tk.Text(window, height = 1, width = 30)
+    text.pack()
+    text.insert(tk.END, tags_itens['total'])
+
+    # Inicia o loop principal da aplicação
+    window.mainloop()
 
 
 if __name__ == "__main__":
     calc_itens()
-    print_itens()
+    openWindow()
