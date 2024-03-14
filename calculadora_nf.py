@@ -53,97 +53,84 @@ def openWindow():
     window.title("Calculadora NF")
 
     # Define as dimensões da janela
-    window.geometry("1366x768")
+    window.geometry("400x300")
 
     #vProd
-    label = ttk.Label(text='vProd:')
-    label.pack()
+    ttk.Label(text='vProd:').grid(column=0, row=0)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=0)
     text.insert(tk.END, tags_itens['vProd'])
 
     #vDesc
-    label = ttk.Label(text='vDesc:')
-    label.pack()
+    ttk.Label(text='vDesc:').grid(column=0, row=1)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=1)
     text.insert(tk.END, tags_itens['vDesc'])
 
     #vICMSDeson
-    label = ttk.Label(text='vICMSDeson:')
-    label.pack()
+    ttk.Label(text='vICMSDeson:').grid(column=0, row=2)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=2)
     text.insert(tk.END, tags_itens['vICMSDeson'])
 
     #vST
-    label = ttk.Label(text='vST:')
-    label.pack()
+    ttk.Label(text='vST:').grid(column=0, row=3)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=3)
     text.insert(tk.END, tags_itens['vST'])
 
     #vFrete
-    label = ttk.Label(text='vFrete:')
-    label.pack()
+    ttk.Label(text='vFrete:').grid(column=0, row=4)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=4)
     text.insert(tk.END, tags_itens['vFrete'])
 
     #vSeg
-    label = ttk.Label(text='vSeg:')
-    label.pack()
+    ttk.Label(text='vSeg:').grid(column=0, row=5)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=5)
     text.insert(tk.END, tags_itens['vSeg'])
 
     #vOutro
-    label = ttk.Label(text='vOutro:')
-    label.pack()
+    ttk.Label(text='vOutro:').grid(column=0, row=6)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=6)
     text.insert(tk.END, tags_itens['vOutro'])
 
     #vII
-    label = ttk.Label(text='vII:')
-    label.pack()
+    ttk.Label(text='vII:').grid(column=0, row=7)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=7)
     text.insert(tk.END, tags_itens['vII'])
 
     #vIPI
-    label = ttk.Label(text='vIPI:')
-    label.pack()
+    ttk.Label(text='vIPI:').grid(column=0, row=8)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=8)
     text.insert(tk.END, tags_itens['vIPI'])
 
     #vIPIdevol
-    label = ttk.Label(text='vIPIdevol:')
-    label.pack()
+    ttk.Label(text='vIPIdevol:').grid(column=0, row=9)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=9)
     text.insert(tk.END, tags_itens['vIPIdevol'])
 
     #vServ
-    label = ttk.Label(text='vServ:')
-    label.pack()
+    ttk.Label(text='vServ:').grid(column=0, row=10)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=10)
     text.insert(tk.END, tags_itens['vServ'])
 
     #vBC
-    label = ttk.Label(text='vBC:')
-    label.pack()
+    ttk.Label(text='vBC:').grid(column=0, row=11)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=11)
     text.insert(tk.END, tags_itens['vBC'])
 
     #Total
-    label = ttk.Label(text='Total:')
-    label.pack()
+    ttk.Label(text='Total:').grid(column=0, row=12)
     text = tk.Text(window, height = 1, width = 30)
-    text.pack()
+    text.grid(column=1, row=12)
     text.insert(tk.END, tags_itens['total'])
 
     # Inicia o loop principal da aplicação
