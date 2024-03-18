@@ -4,40 +4,45 @@ from tkinter import ttk
 from tkinter import filedialog
 
 class App(tk.Tk):
-    # XML file of the NF (Nota fiscal)
+    version = '1.0'
     tags_itens = {}
     text_values = {}
 
     def __init__ (self):
         super().__init__()
         # Adiciona um título à janela
-        self.title("Calculadora NF")
+        self.title("Calculadora NF" + ' - ' + self.version)
 
         # Define as dimensões da janela
-        self.minsize(715,350)
+        self.minsize(715,370)
 
         self.xml_file_path = tk.StringVar()
 
         self.inicia_tags_itens()
 
+        self.create_select_file_button()
+
+        self.create_toolbar()
+
         self.create_widgets()
 
         self.show_results()
 
+
     def inicia_tags_itens(self):
-        self.tags_itens['vProd'] = 0
-        self.tags_itens['vDesc'] = 0     
+        self.tags_itens['vProd']      = 0
+        self.tags_itens['vDesc']      = 0     
         self.tags_itens['vICMSDeson'] = 0
-        self.tags_itens['vST'] = 0       
-        self.tags_itens['vFrete'] = 0    
-        self.tags_itens['vSeg'] = 0      
-        self.tags_itens['vOutro'] = 0
-        self.tags_itens['vII'] = 0       
-        self.tags_itens['vIPI'] = 0      
-        self.tags_itens['vIPIdevol'] = 0
-        self.tags_itens['vServ'] = 0     
-        self.tags_itens['vBC'] = 0
-        self.tags_itens['total'] = 0
+        self.tags_itens['vST']        = 0       
+        self.tags_itens['vFrete']     = 0    
+        self.tags_itens['vSeg']       = 0      
+        self.tags_itens['vOutro']     = 0
+        self.tags_itens['vII']        = 0       
+        self.tags_itens['vIPI']       = 0      
+        self.tags_itens['vIPIdevol']  = 0
+        self.tags_itens['vServ']      = 0     
+        self.tags_itens['vBC']        = 0
+        self.tags_itens['total']      = 0
 
 
     def calc_itens(self):
@@ -46,18 +51,18 @@ class App(tk.Tk):
 
         self.inicia_tags_itens()
 
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vProd')
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vDesc')      # Tag não testada, verificar path
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vICMSDeson') # Tag não testada, verificar path
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vST')        # Tag não testada, verificar path
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vFrete')     # Tag não testada, verificar path
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vSeg')       # Tag não testada, verificar path
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vOutro')
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vII')        # Tag não testada, verificar path
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vIPI')       # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vProd')
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vDesc')      # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vICMSDeson') # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vST')        # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vFrete')     # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vSeg')       # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vOutro')
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vII')        # Tag não testada, verificar path
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vIPI')       # Tag não testada, verificar path
         self.calcTag('.//ns:impostoDevol/ns:IPI/ns:', 'vIPIdevol')
-        self.calcTag('.//ns:det/ns:prod/ns:', 'vServ')      # Tag não testada, verificar path
-        self.calcTag('.//ns:imposto/ns:ICMS//ns:', 'vBC')
+        self.calcTag('.//ns:det/ns:prod/ns:',         'vServ')      # Tag não testada, verificar path
+        self.calcTag('.//ns:imposto/ns:ICMS//ns:',    'vBC')
 
         self.calcTotItens()
 
@@ -67,8 +72,10 @@ class App(tk.Tk):
         for x in self.tags_itens.keys():
             if x in ['total','vBC']:                  # Não conta para o total
                 continue
+
             elif x in ['vDesc','vICMSDeson']:         # Desconta do total
                 self.tags_itens['total'] -= self.tags_itens[x]
+
             else:                                     # Soma no total
                 self.tags_itens['total'] += self.tags_itens[x]
 
@@ -83,11 +90,9 @@ class App(tk.Tk):
         self.tags_itens[tag] = sum(float(prod.text) for prod in root.findall(Xpath, namespace))
 
 
-    # Função para lidar com o botão 'Selecionar Arquivo'
     def selecionar_arquivo(self):
         arquivo = filedialog.askopenfilename(filetypes=[("Arquivos XML", "*.xml")])
         self.xml_file_path.set(arquivo)
-
         self.show_arq_name()
 
 
@@ -113,10 +118,7 @@ class App(tk.Tk):
 
 
     def create_widgets(self):
-        self.create_select_file_button()
-
-        self.create_toolbar()
-
+        # Widgets
         frm = ttk.Frame(self, padding=10)
         frm.grid(row=2)
 
