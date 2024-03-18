@@ -13,7 +13,7 @@ class App(tk.Tk):
         self.title("Calculadora NF")
 
         # Define as dimensões da janela
-        self.geometry("400x400")
+        self.minsize(715,350)
 
         self.xml_file_path = tk.StringVar()
 
@@ -21,7 +21,7 @@ class App(tk.Tk):
 
         self.create_widgets()
 
-        self.insert_result()
+        self.show_results()
 
     def inicia_tags_itens(self):
         self.tags_itens['vProd'] = 0
@@ -40,6 +40,9 @@ class App(tk.Tk):
 
 
     def calc_itens(self):
+        if self.xml_file_path.get() == '':
+            return
+
         self.inicia_tags_itens()
 
         self.calcTag('.//ns:det/ns:prod/ns:', 'vProd')
@@ -68,7 +71,7 @@ class App(tk.Tk):
             else:                                     # Soma no total
                 self.tags_itens['total'] += self.tags_itens[x]
 
-        self.insert_result()
+        self.show_results()
 
 
     def calcTag(self, Xpath, tag):
@@ -84,14 +87,27 @@ class App(tk.Tk):
         arquivo = filedialog.askopenfilename()
         self.xml_file_path.set(arquivo)
 
+        self.show_arq_name()
+
 
     def create_widgets(self):
-        frm2 = ttk.Frame(self, padding=10)
-        frm2.grid(row=0)
 
-        ttk.Button(frm2, text="Selecionar Arquivo", command=self.selecionar_arquivo).grid(column=0, row=0)
-        ttk.Button(frm2, text="Calcular", command=self.calc_itens).grid(column=1, row=0)
-        ttk.Button(frm2, text="Quit", command=self.destroy).grid(column=2, row=0)
+        # Arquivo
+        frm_arq = ttk.Frame(self, padding=10)
+        frm_arq.grid(row=0)
+
+        ttk.Label(frm_arq,text='Selecionar Arquivo:').grid(column=0, row=0)
+        self.text_arq = tk.Text(frm_arq, height = 1, width = 70)
+        self.text_arq.grid(column=1, row=0)
+        self.photo = tk.PhotoImage(file=r"select_file.png").subsample(40,40)
+        ttk.Button(frm_arq, image=self.photo, command=self.selecionar_arquivo).grid(column=2, row=0)
+    
+        # Toolbar
+        frm_toolbar = ttk.Frame(self, padding=10)
+        frm_toolbar.grid(row=1)
+
+        ttk.Button(frm_toolbar, text="Calcular", command=self.calc_itens).grid(column=0, row=0)
+        ttk.Button(frm_toolbar, text="Quit", command=self.destroy).grid(column=1, row=0)
 
         frm = ttk.Frame(self, padding=10)
         frm.grid(row=2)
@@ -145,7 +161,6 @@ class App(tk.Tk):
         ttk.Label(frm,text='vIPIdevol:').grid(column=0, row=9)
         self.text_vIPIdevol = tk.Text(frm, height = 1, width = 30)
         self.text_vIPIdevol.grid(column=1, row=9)
-        
 
         #vServ
         ttk.Label(frm,text='vServ:').grid(column=0, row=10)
@@ -163,7 +178,7 @@ class App(tk.Tk):
         self.text_Total.grid(column=1, row=12)
 
 
-    def insert_result(self):
+    def show_results(self):
         # Limpa os valores 
         self.text_vProd.delete("1.0", tk.END)
         self.text_vDesc.delete("1.0",tk.END)
@@ -193,6 +208,12 @@ class App(tk.Tk):
         self.text_vServ.insert(tk.END, self.tags_itens['vServ'])
         self.text_vBC.insert(tk.END, self.tags_itens['vBC'])
         self.text_Total.insert(tk.END, self.tags_itens['total'])
+
+
+    def show_arq_name(self):
+        self.text_arq.delete("1.0",tk.END)
+
+        self.text_arq.insert(tk.END, self.xml_file_path.get())
 
 
 if __name__ == "__main__":
