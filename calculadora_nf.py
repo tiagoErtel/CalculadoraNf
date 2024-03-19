@@ -6,6 +6,7 @@ from tkinter import filedialog
 class App(tk.Tk):
     # XML file of the NF (Nota fiscal)
     tags_itens = {}
+    text_values = {}
 
     def __init__ (self):
         super().__init__()
@@ -13,7 +14,7 @@ class App(tk.Tk):
         self.title("Calculadora NF")
 
         # Define as dimensões da janela
-        self.geometry("400x400")
+        self.minsize(715,350)
 
         self.xml_file_path = tk.StringVar()
 
@@ -21,7 +22,7 @@ class App(tk.Tk):
 
         self.create_widgets()
 
-        self.insert_result()
+        self.show_results()
 
     def inicia_tags_itens(self):
         self.tags_itens['vProd'] = 0
@@ -40,6 +41,9 @@ class App(tk.Tk):
 
 
     def calc_itens(self):
+        if self.xml_file_path.get() == '':
+            return
+
         self.inicia_tags_itens()
 
         self.calcTag('.//ns:det/ns:prod/ns:', 'vProd')
@@ -68,7 +72,7 @@ class App(tk.Tk):
             else:                                     # Soma no total
                 self.tags_itens['total'] += self.tags_itens[x]
 
-        self.insert_result()
+        self.show_results()
 
 
     def calcTag(self, Xpath, tag):
@@ -81,118 +85,62 @@ class App(tk.Tk):
 
     # Função para lidar com o botão 'Selecionar Arquivo'
     def selecionar_arquivo(self):
-        arquivo = filedialog.askopenfilename()
+        arquivo = filedialog.askopenfilename(filetypes=[("Arquivos XML", "*.xml")])
         self.xml_file_path.set(arquivo)
+
+        self.show_arq_name()
+
+
+    def create_select_file_button(self):
+        # Arquivo
+        frm_arq = ttk.Frame(self, padding=10)
+        frm_arq.grid(row=0)
+
+        ttk.Label(frm_arq,text='Selecionar Arquivo:').grid(column=0, row=0)
+        self.text_arq = tk.Text(frm_arq, height = 1, width = 70)
+        self.text_arq.grid(column=1, row=0)
+        self.photo = tk.PhotoImage(file=r"select_file.png").subsample(40,40)
+        ttk.Button(frm_arq, image=self.photo, command=self.selecionar_arquivo).grid(column=2, row=0)
+
+
+    def create_toolbar(self):
+        # Toolbar
+        frm_toolbar = ttk.Frame(self, padding=10)
+        frm_toolbar.grid(row=1)
+
+        ttk.Button(frm_toolbar, text="Calcular", command=self.calc_itens).grid(column=0, row=0)
+        ttk.Button(frm_toolbar, text="Quit", command=self.destroy).grid(column=1, row=0)
 
 
     def create_widgets(self):
-        frm2 = ttk.Frame(self, padding=10)
-        frm2.grid(row=0)
+        self.create_select_file_button()
 
-        ttk.Button(frm2, text="Selecionar Arquivo", command=self.selecionar_arquivo).grid(column=0, row=0)
-        ttk.Button(frm2, text="Calcular", command=self.calc_itens).grid(column=1, row=0)
-        ttk.Button(frm2, text="Quit", command=self.destroy).grid(column=2, row=0)
+        self.create_toolbar()
 
         frm = ttk.Frame(self, padding=10)
         frm.grid(row=2)
 
-        #vProd
-        ttk.Label(frm,text='vProd:').grid(column=0, row=0)
-        self.text_vProd = tk.Text(frm, height = 1, width = 30)
-        self.text_vProd.grid(column=1, row=0)
-
-        #vDesc
-        ttk.Label(frm,text='vDesc:').grid(column=0, row=1)
-        self.text_vDesc = tk.Text(frm, height = 1, width = 30)
-        self.text_vDesc.grid(column=1, row=1)
-
-        #vICMSDeson
-        ttk.Label(frm,text='vICMSDeson:').grid(column=0, row=2)
-        self.text_vICMSDeson = tk.Text(frm, height = 1, width = 30)
-        self.text_vICMSDeson.grid(column=1, row=2)
-
-        #vST
-        ttk.Label(frm,text='vST:').grid(column=0, row=3)
-        self.text_vST = tk.Text(frm, height = 1, width = 30)
-        self.text_vST.grid(column=1, row=3)
-
-        #vFrete
-        ttk.Label(frm,text='vFrete:').grid(column=0, row=4)
-        self.text_vFrete = tk.Text(frm, height = 1, width = 30)
-        self.text_vFrete.grid(column=1, row=4)
-
-        #vSeg
-        ttk.Label(frm,text='vSeg:').grid(column=0, row=5)
-        self.text_vSeg = tk.Text(frm, height = 1, width = 30)
-        self.text_vSeg.grid(column=1, row=5)
-
-        #vOutro
-        ttk.Label(frm,text='vOutro:').grid(column=0, row=6)
-        self.text_vOutro = tk.Text(frm, height = 1, width = 30)
-        self.text_vOutro.grid(column=1, row=6)
-
-        #vII
-        ttk.Label(frm,text='vII:').grid(column=0, row=7)
-        self.text_vII = tk.Text(frm, height = 1, width = 30)
-        self.text_vII.grid(column=1, row=7)
-
-        #vIPI
-        ttk.Label(frm,text='vIPI:').grid(column=0, row=8)
-        self.text_vIPI = tk.Text(frm, height = 1, width = 30)
-        self.text_vIPI.grid(column=1, row=8)
-
-        #vIPIdevol
-        ttk.Label(frm,text='vIPIdevol:').grid(column=0, row=9)
-        self.text_vIPIdevol = tk.Text(frm, height = 1, width = 30)
-        self.text_vIPIdevol.grid(column=1, row=9)
-        
-
-        #vServ
-        ttk.Label(frm,text='vServ:').grid(column=0, row=10)
-        self.text_vServ = tk.Text(frm, height = 1, width = 30)
-        self.text_vServ.grid(column=1, row=10)
-
-        #vBC
-        ttk.Label(frm,text='vBC:').grid(column=0, row=11)
-        self.text_vBC = tk.Text(frm, height = 1, width = 30)
-        self.text_vBC.grid(column=1, row=11)
-        
-        #Total
-        ttk.Label(frm,text='Total:').grid(column=0, row=12)
-        self.text_Total = tk.Text(frm, height = 1, width = 30)
-        self.text_Total.grid(column=1, row=12)
+        rw = 0
+        for x in self.tags_itens.keys():
+            ttk.Label(frm,text=x+':').grid(column=0, row=rw)
+            self.text_values[x] = tk.Text(frm, height = 1, width = 30)
+            self.text_values[x].grid(column=1, row=rw)
+            rw += 1
 
 
-    def insert_result(self):
-        # Limpa os valores 
-        self.text_vProd.delete("1.0", tk.END)
-        self.text_vDesc.delete("1.0",tk.END)
-        self.text_vICMSDeson.delete("1.0",tk.END)
-        self.text_vST.delete("1.0",tk.END)
-        self.text_vFrete.delete("1.0",tk.END)
-        self.text_vSeg.delete("1.0",tk.END)
-        self.text_vOutro.delete("1.0",tk.END)
-        self.text_vII.delete("1.0",tk.END)
-        self.text_vIPI.delete("1.0",tk.END)
-        self.text_vIPIdevol.delete("1.0",tk.END)
-        self.text_vServ.delete("1.0",tk.END)
-        self.text_vBC.delete("1.0",tk.END)
-        self.text_Total.delete("1.0",tk.END)
+    def show_results(self):
+        for x in self.tags_itens.keys():
+            # Limpa os valores 
+            self.text_values[x].delete("1.0", tk.END)
 
-        # Insere os novos valores
-        self.text_vProd.insert(tk.END, self.tags_itens['vProd'])
-        self.text_vDesc.insert(tk.END, self.tags_itens['vDesc'])
-        self.text_vICMSDeson.insert(tk.END, self.tags_itens['vICMSDeson'])
-        self.text_vST.insert(tk.END, self.tags_itens['vST'])
-        self.text_vFrete.insert(tk.END, self.tags_itens['vFrete'])
-        self.text_vSeg.insert(tk.END, self.tags_itens['vSeg'])
-        self.text_vOutro.insert(tk.END, self.tags_itens['vOutro'])
-        self.text_vII.insert(tk.END, self.tags_itens['vII'])
-        self.text_vIPI.insert(tk.END, self.tags_itens['vIPI'])
-        self.text_vIPIdevol.insert(tk.END, self.tags_itens['vIPIdevol'])
-        self.text_vServ.insert(tk.END, self.tags_itens['vServ'])
-        self.text_vBC.insert(tk.END, self.tags_itens['vBC'])
-        self.text_Total.insert(tk.END, self.tags_itens['total'])
+            # Insere os novos valores
+            self.text_values[x].insert(tk.END, self.tags_itens[x])
+
+
+    def show_arq_name(self):
+        self.text_arq.delete("1.0",tk.END)
+
+        self.text_arq.insert(tk.END, self.xml_file_path.get())
 
 
 if __name__ == "__main__":
